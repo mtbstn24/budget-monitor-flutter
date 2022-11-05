@@ -13,6 +13,8 @@ class _addEntryPageState extends State<addEntryPage> {
     return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
+            leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+            centerTitle: true,
             title: const Text("Add Entry"),
           ),
           body: Column(

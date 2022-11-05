@@ -13,7 +13,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     searchController.dispose();
   }
@@ -47,7 +46,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
             Card(
               child: Container(
                 height: 120,
-                color: const Color.fromARGB(255, 56, 55, 55),
+                color: Colors.blue[100],
                 child: Row(
                   children: [
                     Center(

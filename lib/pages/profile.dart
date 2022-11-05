@@ -19,6 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
     return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
+            leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+            centerTitle: true,
             title: const Text("Profile Details"),
             actions: [
               IconButton(

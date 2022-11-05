@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:firebase_flutter/pages/addMembers.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_flutter/sample/personal.dart';
 
 class EntriesPage extends StatefulWidget {
   const EntriesPage({Key? key}) : super(key: key);
@@ -11,10 +14,10 @@ class EntriesPage extends StatefulWidget {
 class _EntriesPageState extends State<EntriesPage> {
   final TextEditingController searchController = TextEditingController();
   bool isShowUsers = false;
+  bool personal = true;
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     searchController.dispose();
   }
@@ -23,31 +26,32 @@ class _EntriesPageState extends State<EntriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
         // backgroundColor: Colors.transparent,
+        leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
         elevation: 0,
         centerTitle: true,
         title: const Text('All Entries'),
       ),
       body: Column(
           children: [
-            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                getPersonalButton(),
+                getFamilyButton()
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text((personal)? "Personal entries" : "Family entries",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+            ),
+            const SizedBox(height: 10),
             Card(
               child: Container(
-                height: 120,
-                color: const Color.fromARGB(255, 56, 55, 55),
+                height: 100,
+                color: Colors.blue[50],
                 child: Row(
                   children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Expanded(
-                          child: Image.network(
-                              'https://www.oberlo.com/media/1605012362-image14.jpg'),
-                          flex: 2,
-                        ),
-                      ),
-                    ),
                     Expanded(
                       child: Container(
                         alignment: Alignment.topLeft,
@@ -56,17 +60,26 @@ class _EntriesPageState extends State<EntriesPage> {
                             const Expanded(
                               flex: 5,
                               child: ListTile(
-                                title: Text('Thushari'),
-                                subtitle: Text("0769838892"),
+                                title: Text('Rs. 5000'),
+                                subtitle: Text("Telephone bill"),
+                                leading: Text("Expense", style: TextStyle(color: Colors.red),),
                               ),
                             ),
                             Expanded(
                               flex: 5,
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                alignment: Alignment.topRight,
+                                child: Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
+                              ),
+                            ),
+                             Expanded(
+                              flex: 5,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton(
-                                      child: const Text("Select"), onPressed: () {}),
+                                      child: const Text("Remove"), onPressed: () {}),
                                   const SizedBox(
                                     width: 8,
                                   )
@@ -87,5 +100,23 @@ class _EntriesPageState extends State<EntriesPage> {
           ],
         )
     );
+  }
+
+  getPersonalButton(){
+    if(personal){
+      return TextButton(onPressed: (){}, child: const Text("Personal"));
+    }else{
+      return ElevatedButton(onPressed: (){setState(() { personal = true; });}, child: const Text("Personal"), 
+      style: ElevatedButton.styleFrom(primary: Colors.blue[600]));
+    }
+  }
+
+  getFamilyButton(){
+    if(personal){
+      return ElevatedButton(onPressed: (){setState(() { personal = false; });}, child: const Text("Family"), 
+      style: ElevatedButton.styleFrom(primary: Colors.blue[600]));
+    }else{
+      return TextButton(onPressed: (){}, child: const Text("Family"));
+    }
   }
 }

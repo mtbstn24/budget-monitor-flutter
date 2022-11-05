@@ -37,24 +37,11 @@ class _MemberPageState extends State<MemberPage> {
       ),
       body: Column(
           children: [
-            // Container(
-            //   margin: const EdgeInsets.symmetric(horizontal: 10),
-            //   child: TextFormField(
-            //     controller: searchController,
-            //     decoration:
-            //         const InputDecoration(labelText: 'Search with username'),
-            //     onFieldSubmitted: (String _) {
-            //       setState(() {
-            //         isShowUsers = true;
-            //       });
-            //     },
-            //   ),
-            // ),
             const SizedBox(height: 20),
             Card(
               child: Container(
                 height: 120,
-                color: const Color.fromARGB(255, 56, 55, 55),
+                color: Colors.blue[100],
                 child: Row(
                   children: [
                     Center(
@@ -85,7 +72,7 @@ class _MemberPageState extends State<MemberPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   TextButton(
-                                      child: const Text("Select"), onPressed: () {}),
+                                      child: const Text("Remove"), onPressed: () {}),
                                   const SizedBox(
                                     width: 8,
                                   )
