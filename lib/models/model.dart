@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class User {
-  User({required this.id, required this.fname, required this.lname, required this.email});
+class SystemUser {
+  SystemUser({required this.id, required this.fname, required this.lname, required this.email});
   final String id;
   final String fname;
   final String lname;
   final String email;
 
-  factory User.fromJson(Map<String, dynamic> json){
-    return User(id: json['id'],fname: json['fname'], lname: json['lname'], email: json['email']);
+  factory SystemUser.fromJson(Map<String, dynamic> json){
+    return SystemUser(id: json['id'],fname: json['fname'], lname: json['lname'], email: json['email']);
   }
+
+  Map<String, dynamic> toJson() => {
+    'id' : id, 'fname' : fname, 'lname' : lname, 'email' : email
+  };
 }
 
 class Entry {
@@ -43,7 +47,7 @@ class MonthlyData {
 class Personal {
   Personal({required this.id, required this.user, required this.monthlyData});
   final String id;
-  final User user;
+  final SystemUser user;
   final List<MonthlyData> monthlyData;
 
   factory Personal.fromJson(Map<String, dynamic> json){
@@ -54,8 +58,8 @@ class Personal {
 class Home {
   Home({ required this.id, required this.user, required this.members, required this.monthlyData});
   final String id;
-  final User user;
-  final List<User> members;
+  final SystemUser user;
+  final List<SystemUser> members;
   final MonthlyData monthlyData;
 
   factory Home.fromJson(Map<String, dynamic> json){
