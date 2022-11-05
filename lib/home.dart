@@ -1,3 +1,4 @@
+import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:firebase_flutter/family.dart';
 import 'package:firebase_flutter/pages/addEntry.dart';
 import 'package:firebase_flutter/pages/entries.dart';

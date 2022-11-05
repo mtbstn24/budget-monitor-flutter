@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/auth.dart';
+import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:firebase_flutter/home.dart';
 import 'package:firebase_flutter/personal.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,10 @@ class _LandingState extends State<Landing> {
         builder: (context, snapshot) {
           if(snapshot.hasData){
             print('User Signed In : $snapshot');
+            
+            print('-------------------\n');
+            getUserDetails();
+            print("\n-------------------");
             return const HomePage();
           }
           else{

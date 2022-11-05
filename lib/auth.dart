@@ -74,7 +74,9 @@ class _FirebaseauthState extends State<Firebaseauth> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter App Auth Page'),
+        leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+        centerTitle: true,
+        title: const Text("Enter In"),
       ),
       body: Center(
         child: Column(

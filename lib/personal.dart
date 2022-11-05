@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/auth.dart';
+import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:firebase_flutter/home.dart';
 import 'package:firebase_flutter/widgets/barChart.dart';
 import 'package:flutter/material.dart';
@@ -42,22 +43,13 @@ class _PersonalPageState extends State<PersonalPage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+          centerTitle: true,
           title: const Text("Personal Budget"),
-          // actions: [
-          //   IconButton(
-          //     onPressed: () async {
-          //         final budgetValue = await openDialog();
-          //         if(budgetValue == null || budgetValue == 0 as num) return;
-          //         setState(() {
-          //           this.budgetValue = budgetValue;
-          //         });
-          //       },
-          //     icon: const Icon(Icons.settings),
-          //   )
-          // ],
         ),
         body: Center(
           child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 35),
               child: Column(
             children: [
               Container(
@@ -148,6 +140,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 padding: const EdgeInsets.all(10),
                 child: barChart(),
               ),
+              getAllEntriePage(),
               const Padding(
                 padding: EdgeInsets.all(50),
                 child: Text('Signed In to Personal Page'),
@@ -202,6 +195,65 @@ class _PersonalPageState extends State<PersonalPage> {
 
   void cancel() {
     Navigator.of(context).pop(this.budgetValue);
+  }
+
+  getAllEntriePage(){
+    return Column(
+          children: [
+            const SizedBox(height: 20),
+            Card(
+              child: Container(
+                height: 100,
+                color: Colors.blue[50],
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            const Expanded(
+                              flex: 5,
+                              child: ListTile(
+                                title: Text('Rs. 25000'),
+                                subtitle: Text("Salary"),
+                                leading: Text("Income", style: TextStyle(color: Colors.green),)
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                alignment: Alignment.topRight,
+                                child: Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
+                              ),
+                            ),
+                             Expanded(
+                              flex: 5,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                      child: const Text("Remove"), onPressed: () {}),
+                                  const SizedBox(
+                                    width: 8,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      flex: 8,
+                    ),
+                  ],
+                ),
+              ),
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
+            ),
+          ],
+        );
   }
 
 }
