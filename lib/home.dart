@@ -1,8 +1,6 @@
-import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:firebase_flutter/family.dart';
 import 'package:firebase_flutter/pages/addEntry.dart';
 import 'package:firebase_flutter/pages/entries.dart';
-import 'package:firebase_flutter/pages/members.dart';
 import 'package:firebase_flutter/personal.dart';
 import 'package:firebase_flutter/pages/profile.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   int pageIndex = 0;
 
+  //defines the list of pages that should be linked to the bottom bar using a indexedstack
   List <Widget> pages = [
     const PersonalPage(),
     const FamilyPage(),
@@ -38,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  //clears the user session and signs out of the application
   void signOut() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
       );
   }
 
+  //defines the indexed stack widget linked with the pages and relevant index of current page
   Widget getPage() {
     return IndexedStack(
       index: pageIndex,
@@ -65,6 +66,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //defines the bottom tab that holds the icons linked to the relevant pages
   Widget getBottomTabBar() {
     List<IconData> tabBarIcons = [
       Icons.wallet,
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //selects a specific page and sets it as the current page
   selectTab(index){
     setState(() {
       pageIndex = index;

@@ -20,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await FirebaseAuth.instance.signOut();
   }
 
+  //function that calls the firebase method to update the user details
   void updateDetails(id) async{
     editUserDetails(id, _fname.text, _lname.text).then((String res) {
       if(res == "success"){
@@ -37,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
-            leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+            leading: const Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
             centerTitle: true,
             title: const Text("Profile Details"),
             actions: [
@@ -49,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           body: SingleChildScrollView(
             child: StreamBuilder(
+              //using streambuilder to specify the query and the builder to render the results
                   stream: FirebaseFirestore.instance
                       .collection('users')
                       .where('id',isEqualTo: getUserDetails())

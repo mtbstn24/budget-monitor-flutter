@@ -45,7 +45,7 @@ class _MemberPageState extends State<MemberPage> {
   }
 }
 
-
+//returns widget structure used for displaying one record
 Widget oneMember(String name, String email){
   return Card(
               elevation: 8,

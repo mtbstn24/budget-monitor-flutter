@@ -1,15 +1,7 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_flutter/auth.dart';
 import 'package:firebase_flutter/controllers/methods.dart';
-import 'package:firebase_flutter/home.dart';
 import 'package:firebase_flutter/widgets/barChart.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:fl_chart/fl_chart.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:firebase_flutter/widgets/chart.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -35,13 +27,11 @@ class _PersonalPageState extends State<PersonalPage> {
     super.dispose();
   }
 
-  void signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
+  //specified the firebase method to delete an entry
   void removeEntry(id) async{
     deleteEntry(id).then((res) {
       if(res == "success"){
+        //displays a message about the process done
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Entry Deleted Successfully"),
@@ -62,7 +52,7 @@ class _PersonalPageState extends State<PersonalPage> {
         ),
         body: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: 35),
+            padding: const EdgeInsets.only(bottom: 35),
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('personal')
@@ -172,12 +162,14 @@ class _PersonalPageState extends State<PersonalPage> {
         ));
   }
 
+
+  //returns the dialog box to be poped up
   Future<num?> openDialog(value) {
 
+    //sets the current budget value and controller value
     setState(() {
       budgetValue = int.parse(value['budget']);
     });
-
     setState(() {
       budgetController.text = value['budget'];
     });
@@ -220,10 +212,12 @@ class _PersonalPageState extends State<PersonalPage> {
     Navigator.of(context).pop(this.budgetValue);
   }
 
+  //gets all personalData entries from database and display as list view
   getAllEntriePage(){
     return Column(
           children: [
             const SizedBox(height: 20),
+            //specifies the query and the builder function to be used to render the data
             StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('personalData')

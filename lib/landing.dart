@@ -1,8 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/auth.dart';
-import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:firebase_flutter/home.dart';
-import 'package:firebase_flutter/personal.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -19,16 +16,13 @@ class _LandingState extends State<Landing> {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          //checks if a user is signed in already
           if(snapshot.hasData){
             print('User Signed In : $snapshot');
-            
-            print('-------------------\n');
-            getUserDetails();
-            print("\n-------------------");
             return const HomePage();
           }
           else{
-            return const Firebaseauth();
+            return const Firebaseauth(); //redirects to the Sign In , Sign Up page
           }
         } 
       );

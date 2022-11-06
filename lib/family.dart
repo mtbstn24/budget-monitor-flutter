@@ -1,9 +1,7 @@
-import 'package:firebase_flutter/pages/familyDash.dart';
 import 'package:firebase_flutter/pages/members.dart';
 import 'package:firebase_flutter/widgets/barChart.dart';
 import 'package:firebase_flutter/widgets/chart.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FamilyPage extends StatefulWidget {
   const FamilyPage({Key? key}) : super(key: key);
@@ -29,10 +27,6 @@ class _FamilyPageState extends State<FamilyPage> {
   void dispose() {
     budgetController.dispose();
     super.dispose();
-  }
-
-  void signOut() async {
-    await FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -143,27 +137,14 @@ class _FamilyPageState extends State<FamilyPage> {
                 child: barChart(),
               ),
               getAllEntriesPage(),
-              const Padding(
-                padding: EdgeInsets.all(50),
-                child: Text('Signed In to Personal Page'),
-              ),
-              ElevatedButton(
-                onPressed: signOut,
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20.0)),
-                child: const Text("Sign Out"),
-              ),
             ],
           )),
         )
-      // body: getFamPage(),
     );
   }
-
+  
+  //returns the dialog box to be poped up
   Future<num?> openDialog(value) {
-    // setState(() {
-    //   budgetController.text = num.parse(value);
-    // });
     return showDialog<num>(
         context: context,
         builder: (context) => AlertDialog(
@@ -200,7 +181,8 @@ class _FamilyPageState extends State<FamilyPage> {
   void cancel() {
     Navigator.of(context).pop(budgetValue);
   }
-
+  
+  //function that returns the column of entries
   getAllEntriesPage(){
     return Column(
           children: [

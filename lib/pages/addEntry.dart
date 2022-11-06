@@ -12,14 +12,18 @@ class addEntryPage extends StatefulWidget {
 
 class _addEntryPageState extends State<addEntryPage> {
 
+  //defining arrays used as drop down items
   List<String> types = ['expense','income'];
   String? type = 'expense';
   List<String> budgetTypes = ['personal','family'];
   String? budgetType ='personal';
   List<String> recurrings = ['recurring','onetime'];
   String? recurring ='onetime';
+
+  //initializing controllers used for monitoring the textfield values
   final TextEditingController _cause = TextEditingController();
   final TextEditingController _amount = TextEditingController();
+
   DateTime selectedDate = DateTime.now();
   DateTime dateTime = DateTime.now();
   bool showDate = false;
@@ -36,7 +40,7 @@ class _addEntryPageState extends State<addEntryPage> {
     super.dispose();
   }
 
-  // Select for Date
+  // Date Picker
   Future<DateTime> _selectDate(BuildContext context) async {
     final selected = await showDatePicker(
       context: context,
@@ -52,6 +56,7 @@ class _addEntryPageState extends State<addEntryPage> {
     return selectedDate;
   }
 
+
    String getDate() {
     // ignore: unnecessary_null_comparison
     if (selectedDate == null) {
@@ -60,6 +65,7 @@ class _addEntryPageState extends State<addEntryPage> {
       return DateFormat('MMM d, yyyy').format(selectedDate);
     }
   }
+
 
   //Add the new entry
   void saveEntry(){

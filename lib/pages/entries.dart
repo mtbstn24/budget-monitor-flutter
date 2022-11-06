@@ -22,9 +22,11 @@ class _EntriesPageState extends State<EntriesPage> {
     searchController.dispose();
   }
 
+//function that calls the firebase function used to delete a record
   void removeEntry(id) async{
     deleteEntry(id).then((res) {
       if(res == "success"){
+        //renders a message to show the process success
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Entry Deleted Successfully"),
@@ -58,6 +60,7 @@ class _EntriesPageState extends State<EntriesPage> {
             ),
             const SizedBox(height: 10),
             StreamBuilder(
+              //streambuilder to specify the query and builder used to render the query results
                   stream: FirebaseFirestore.instance
                       .collection('personalData')
                       .snapshots(),
@@ -65,6 +68,7 @@ class _EntriesPageState extends State<EntriesPage> {
                       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                           snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
+                      //widget called until the records are received
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
@@ -93,6 +97,7 @@ class _EntriesPageState extends State<EntriesPage> {
                                 title: Text(snapshot.data!.docs[index].data()['amount'].toString()),
                                 subtitle: Text(snapshot.data!.docs[index].data()['cause']),
                                 leading: Text(snapshot.data!.docs[index].data()['type'], 
+                                //using conditional statements to change the text color
                                 style: TextStyle(color: 
                                 (snapshot.data!.docs[index].data()['type']== "expense")?Colors.red
                                 : Colors.green),),
@@ -113,6 +118,7 @@ class _EntriesPageState extends State<EntriesPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton(
+                                    //calls the remove function with the specific record id
                                       child: const Text("Remove"), 
                                       onPressed: () {removeEntry(snapshot.data!.docs[index].data()['id']);}
                                     ),
@@ -139,6 +145,7 @@ class _EntriesPageState extends State<EntriesPage> {
     );
   }
 
+  //function returns the button depending on the status value
   getPersonalButton(){
     if(personalStatus){
       setState(() {
@@ -151,6 +158,7 @@ class _EntriesPageState extends State<EntriesPage> {
     }
   }
 
+//function returns the button depending on the status value
   getFamilyButton(){
     if(personalStatus){
       return ElevatedButton(onPressed: (){setState(() { personalStatus = false; });}, 
