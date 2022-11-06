@@ -1,6 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_flutter/auth.dart';
-import 'package:firebase_flutter/home.dart';
 import 'package:firebase_flutter/pages/familyDash.dart';
 import 'package:firebase_flutter/pages/members.dart';
 import 'package:firebase_flutter/widgets/barChart.dart';
@@ -22,11 +19,6 @@ class _FamilyPageState extends State<FamilyPage> {
 
   int fampageIndex = 0;
 
-  List <Widget> fampages = [
-    const FamilyDashPage(),
-    const MemberPage()
-  ];
-
    @override
   void initState() {
     super.initState();
@@ -47,7 +39,7 @@ class _FamilyPageState extends State<FamilyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+        leading: const Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
         centerTitle: true,
         title: const Text("Family Budget"),
         actions: [
@@ -59,7 +51,7 @@ class _FamilyPageState extends State<FamilyPage> {
       ),
       body: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: 35),
+            padding: const EdgeInsets.only(bottom: 35),
               child: Column(
             children: [
               Container(
@@ -168,19 +160,6 @@ class _FamilyPageState extends State<FamilyPage> {
     );
   }
 
-  Widget getFamPage() {
-    return IndexedStack(
-      index: fampageIndex,
-      children: fampages,
-    );
-  }
-
-  selectFamTab(index){
-    setState(() {
-      fampageIndex = index;
-    });
-  }
-
   Future<num?> openDialog(value) {
     // setState(() {
     //   budgetController.text = num.parse(value);
@@ -219,7 +198,7 @@ class _FamilyPageState extends State<FamilyPage> {
   }
 
   void cancel() {
-    Navigator.of(context).pop(this.budgetValue);
+    Navigator.of(context).pop(budgetValue);
   }
 
   getAllEntriesPage(){
@@ -227,12 +206,15 @@ class _FamilyPageState extends State<FamilyPage> {
           children: [
             const SizedBox(height: 20),
             Card(
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
               child: Container(
                 height: 100,
                 color: Colors.blue[50],
                 child: Row(
                   children: [
                     Expanded(
+                      flex: 8,
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Column(
@@ -247,9 +229,9 @@ class _FamilyPageState extends State<FamilyPage> {
                             Expanded(
                               flex: 5,
                               child: Container(
-                                margin: EdgeInsets.all(5),
+                                margin: const EdgeInsets.all(5),
                                 alignment: Alignment.topRight,
-                                child: Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
+                                child: const Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
                               ),
                             ),
                              Expanded(
@@ -268,16 +250,12 @@ class _FamilyPageState extends State<FamilyPage> {
                           ],
                         ),
                       ),
-                      flex: 8,
                     ),
                   ],
                 ),
               ),
-              elevation: 8,
-              margin: const EdgeInsets.all(10),
             ),
           ],
         );
   }
-
 }

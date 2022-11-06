@@ -1,6 +1,6 @@
 import 'package:firebase_flutter/sample/user.dart';
 
-final personal = [
+final home = [
   {
     'id' : 'L4fyiP0yzPbZaSvgh2MUtgxDeK34',
     'userid' : 'L4fyiP0yzPbZaSvE9DMUtgxDeKH2',

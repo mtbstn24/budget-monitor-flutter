@@ -28,6 +28,6 @@ class _PieData {
 }
 
 List<_PieData> pieData = [
-  _PieData("Spent", 30, "Rs.10000"),
-  _PieData("Balance", 70, "Rs.50000"),
+  _PieData("Spent", 30, "Rs.15000"),
+  _PieData("Balance", 70, "Rs.30000"),
 ];

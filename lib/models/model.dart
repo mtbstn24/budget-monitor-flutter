@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SystemUser {
   SystemUser({required this.id, required this.fname, required this.lname, required this.email});
@@ -19,53 +17,57 @@ class SystemUser {
 }
 
 class Entry {
-  Entry({required this.id, required this.dateTime, required this.amount, required this.cause, required this.type, required this.recurring});
+  Entry({required this.id,required this.userid, required this.dateTime, required this.amount, required this.cause, required this.type, required this.recurring});
   final String id;
+  final String userid;
   final DateTime dateTime;
   final num amount;
   final String cause;
-  final Type type;
+  final String type;
   final bool recurring;
 
   factory Entry.fromJson(Map<String, dynamic> json){
-    return Entry(id: json['id'], dateTime: json['dateTime'], amount: json['amount'],cause: json['cause'],
+    return Entry( id: json['id'], userid: json['userid'], dateTime: json['dateTime'], amount: json['amount'],cause: json['cause'],
       type: json['type'], recurring: json['recurring']);
   }
-}
 
-class MonthlyData {
-  MonthlyData({ required this.monthYear, required this.budget, required this.entries});
-  final DateTime monthYear;
-  final num budget;
-  final List<Entry> entries;
-
-  factory MonthlyData.fromJson(Map<String, dynamic> json){
-    return MonthlyData(monthYear: json['monthYear'], budget: json['budget'], entries: json['entries']);
-  }
+  Map<String, dynamic> toJson() => {
+    'id':id,'userid':userid, 'dateTime' : dateTime, 'amount' : amount, 'cause' : cause, 'type' : type, 'recurring' : recurring
+  };
 }
 
 class Personal {
-  Personal({required this.id, required this.user, required this.monthlyData});
+  Personal({required this.id, required this.userid, required this.monthYear, required this.budget,});
   final String id;
-  final SystemUser user;
-  final List<MonthlyData> monthlyData;
+  final String userid;
+  final DateTime monthYear;
+  final num budget;
 
   factory Personal.fromJson(Map<String, dynamic> json){
-    return Personal(id: json['id'], user: json['user'], monthlyData: json['monthlyData']);
+    return Personal(id: json['id'], userid: json['userid'], monthYear: json['monthYear'], budget: json['budget'],);
   }
+
+  static Personal fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return Personal(
+        id: snapshot['id'], userid: snapshot['userid'], monthYear: snapshot['monthYear'], budget: snapshot['budget']);
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id':id,'userid':userid, 'monthYear' : monthYear, 'budget' : budget,
+  };
 }
 
-class Home {
-  Home({ required this.id, required this.user, required this.members, required this.monthlyData});
-  final String id;
-  final SystemUser user;
-  final List<SystemUser> members;
-  final MonthlyData monthlyData;
+// class Home {
+//   Home({ required this.userid, required this.members, required this.monthlyData});
+//   final String userid;
+//   final List<SystemUser> members;
+//   final MonthlyData monthlyData;
 
-  factory Home.fromJson(Map<String, dynamic> json){
-    return Home(id: json['id'], user: json['user'], members: json['members'], monthlyData: json['monthlyData']);
-  }
-}
+//   factory Home.fromJson(Map<String, dynamic> json){
+//     return Home(userid: json['userid'], members: json['members'], monthlyData: json['monthlyData']);
+//   }
+// }
 
 class Recurring {
   Recurring({ required this.id, required this.amount, required this.cause, required this.repeatmode});

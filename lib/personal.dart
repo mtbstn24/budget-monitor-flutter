@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/auth.dart';
 import 'package:firebase_flutter/controllers/methods.dart';
@@ -38,19 +39,44 @@ class _PersonalPageState extends State<PersonalPage> {
     await FirebaseAuth.instance.signOut();
   }
 
+  void removeEntry(id) async{
+    deleteEntry(id).then((res) {
+      if(res == "success"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Entry Deleted Successfully"),
+          ),
+        ); 
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+          leading: const Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
           centerTitle: true,
           title: const Text("Personal Budget"),
         ),
         body: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 35),
-              child: Column(
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('personal')
+                      .where("userid",isEqualTo: getUserDetails())
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+              return Column(
             children: [
               Container(
                   decoration: BoxDecoration(
@@ -93,7 +119,7 @@ class _PersonalPageState extends State<PersonalPage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text('$budgetValue',
+                            Text(snapshot.data!.docs[0].data()['budget'],
                                 style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -104,7 +130,7 @@ class _PersonalPageState extends State<PersonalPage> {
                             ),
                             IconButton(
                               onPressed: () async {
-                                final budgetValue = await openDialog(this.budgetValue);
+                                final budgetValue = await openDialog(snapshot.data!.docs[0].data());
                                 if (budgetValue == null ||
                                     budgetValue == 0) return;
                                 setState(() {
@@ -141,25 +167,21 @@ class _PersonalPageState extends State<PersonalPage> {
                 child: barChart(),
               ),
               getAllEntriePage(),
-              const Padding(
-                padding: EdgeInsets.all(50),
-                child: Text('Signed In to Personal Page'),
-              ),
-              ElevatedButton(
-                onPressed: signOut,
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(20.0)),
-                child: const Text("Sign Out"),
-              ),
-            ],
-          )),
+            ],);
+        })),
         ));
   }
 
   Future<num?> openDialog(value) {
-    // setState(() {
-    //   budgetController.text = num.parse(value);
-    // });
+
+    setState(() {
+      budgetValue = int.parse(value['budget']);
+    });
+
+    setState(() {
+      budgetController.text = value['budget'];
+    });
+
     return showDialog<num>(
         context: context,
         builder: (context) => AlertDialog(
@@ -171,13 +193,13 @@ class _PersonalPageState extends State<PersonalPage> {
                 decoration: const InputDecoration(hintText: 'Monthly Budget'),
                 controller: budgetController,
                 keyboardType: TextInputType.number,
-                onSubmitted: (_) => submit(),
+                onSubmitted: (_) => submit(value['id']),
               )
             ],
           ),
           actions: [
             TextButton(
-              onPressed: submit,
+              onPressed:() {submit(value['id']);},
               child: const Text('SUBMIT'),
             ),
             TextButton(
@@ -189,7 +211,8 @@ class _PersonalPageState extends State<PersonalPage> {
       );
   }
 
-  void submit() {
+  void submit(id) {
+    // updateBudget(id,int.parse(budgetController.text));
     Navigator.of(context).pop(num.parse(budgetController.text));
   }
 
@@ -201,31 +224,54 @@ class _PersonalPageState extends State<PersonalPage> {
     return Column(
           children: [
             const SizedBox(height: 20),
-            Card(
+            StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('personalData')
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+            return ListView.separated(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(8),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index) => Card(
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
               child: Container(
                 height: 100,
                 color: Colors.blue[50],
                 child: Row(
                   children: [
                     Expanded(
+                      flex: 8,
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Column(
                           children: [
-                            const Expanded(
+                            Expanded(
                               flex: 5,
                               child: ListTile(
-                                title: Text('Rs. 25000'),
-                                subtitle: Text("Salary"),
-                                leading: Text("Income", style: TextStyle(color: Colors.green),)
+                                title: Text(snapshot.data!.docs[index].data()['amount'].toString()),
+                                subtitle: Text(snapshot.data!.docs[index].data()['cause']),
+                                leading: Text(snapshot.data!.docs[index].data()['type'], 
+                                style: TextStyle(color: 
+                                (snapshot.data!.docs[index].data()['type']== "expense")?Colors.red
+                                : Colors.green),),
                               ),
                             ),
                             Expanded(
                               flex: 5,
                               child: Container(
-                                margin: EdgeInsets.all(5),
+                                margin: const EdgeInsets.all(5),
                                 alignment: Alignment.topRight,
-                                child: Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
+                                child: Text((snapshot.data!.docs[index].data()['dateTime'] as Timestamp).toDate().toString().split(' ')[0],
+                                 style: const TextStyle(fontWeight: FontWeight.w500),),
                               ),
                             ),
                              Expanded(
@@ -234,7 +280,9 @@ class _PersonalPageState extends State<PersonalPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton(
-                                      child: const Text("Remove"), onPressed: () {}),
+                                      child: const Text("Remove"), 
+                                      onPressed: () {removeEntry(snapshot.data!.docs[index].data()['id']);}
+                                    ),
                                   const SizedBox(
                                     width: 8,
                                   )
@@ -244,14 +292,15 @@ class _PersonalPageState extends State<PersonalPage> {
                           ],
                         ),
                       ),
-                      flex: 8,
                     ),
                   ],
                 ),
               ),
-              elevation: 8,
-              margin: const EdgeInsets.all(10),
-            ),
+            ), 
+            separatorBuilder: (BuildContext context, int index)=> const Divider(),
+            );
+          }
+        ),
           ],
         );
   }

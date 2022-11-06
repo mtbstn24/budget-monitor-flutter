@@ -1,8 +1,8 @@
-import 'dart:ui';
-
-import 'package:firebase_flutter/pages/addMembers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_flutter/sample/personal.dart';
+import 'package:firebase_flutter/sample/personal.dart' as personal;
+import 'package:firebase_flutter/sample/home.dart' as family;
 
 class EntriesPage extends StatefulWidget {
   const EntriesPage({Key? key}) : super(key: key);
@@ -13,8 +13,8 @@ class EntriesPage extends StatefulWidget {
 
 class _EntriesPageState extends State<EntriesPage> {
   final TextEditingController searchController = TextEditingController();
-  bool isShowUsers = false;
-  bool personal = true;
+  bool personalStatus = true;
+  var entries = [];
 
   @override
   void dispose() {
@@ -22,12 +22,23 @@ class _EntriesPageState extends State<EntriesPage> {
     searchController.dispose();
   }
 
+  void removeEntry(id) async{
+    deleteEntry(id).then((res) {
+      if(res == "success"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Entry Deleted Successfully"),
+          ),
+        ); 
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.transparent,
-        leading: Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
+        leading: const Text("Cashey", style: TextStyle(fontSize: 17, fontStyle: FontStyle.italic)),
         elevation: 0,
         centerTitle: true,
         title: const Text('All Entries'),
@@ -42,35 +53,58 @@ class _EntriesPageState extends State<EntriesPage> {
               ],
             ),
             const SizedBox(height: 10),
-            Text((personal)? "Personal entries" : "Family entries",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+            Text((personalStatus)? "Personal entries" : "Family entries",
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
             ),
             const SizedBox(height: 10),
-            Card(
+            StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('personalData')
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+            return ListView.separated(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(8),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index) => Card(
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
               child: Container(
                 height: 100,
                 color: Colors.blue[50],
                 child: Row(
                   children: [
                     Expanded(
+                      flex: 8,
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Column(
                           children: [
-                            const Expanded(
+                            Expanded(
                               flex: 5,
                               child: ListTile(
-                                title: Text('Rs. 5000'),
-                                subtitle: Text("Telephone bill"),
-                                leading: Text("Expense", style: TextStyle(color: Colors.red),),
+                                title: Text(snapshot.data!.docs[index].data()['amount'].toString()),
+                                subtitle: Text(snapshot.data!.docs[index].data()['cause']),
+                                leading: Text(snapshot.data!.docs[index].data()['type'], 
+                                style: TextStyle(color: 
+                                (snapshot.data!.docs[index].data()['type']== "expense")?Colors.red
+                                : Colors.green),),
                               ),
                             ),
                             Expanded(
                               flex: 5,
                               child: Container(
-                                margin: EdgeInsets.all(5),
+                                margin: const EdgeInsets.all(5),
                                 alignment: Alignment.topRight,
-                                child: Text("2022-11-04", style: TextStyle(fontWeight: FontWeight.w500),),
+                                child: Text((snapshot.data!.docs[index].data()['dateTime'] as Timestamp).toDate().toString().split(' ')[0],
+                                 style: const TextStyle(fontWeight: FontWeight.w500),),
                               ),
                             ),
                              Expanded(
@@ -79,7 +113,9 @@ class _EntriesPageState extends State<EntriesPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton(
-                                      child: const Text("Remove"), onPressed: () {}),
+                                      child: const Text("Remove"), 
+                                      onPressed: () {removeEntry(snapshot.data!.docs[index].data()['id']);}
+                                    ),
                                   const SizedBox(
                                     width: 8,
                                   )
@@ -89,33 +125,40 @@ class _EntriesPageState extends State<EntriesPage> {
                           ],
                         ),
                       ),
-                      flex: 8,
                     ),
                   ],
                 ),
               ),
-              elevation: 8,
-              margin: const EdgeInsets.all(10),
-            ),
-          ],
+            ), 
+            separatorBuilder: (BuildContext context, int index)=> const Divider(),
+            );
+          }
         )
+      ],
+      )
     );
   }
 
   getPersonalButton(){
-    if(personal){
+    if(personalStatus){
+      setState(() {
+        entries = personal.personal;
+      });
       return TextButton(onPressed: (){}, child: const Text("Personal"));
     }else{
-      return ElevatedButton(onPressed: (){setState(() { personal = true; });}, child: const Text("Personal"), 
-      style: ElevatedButton.styleFrom(primary: Colors.blue[600]));
+      return ElevatedButton(onPressed: (){setState(() { personalStatus = true; });}, 
+      style: ElevatedButton.styleFrom(primary: Colors.blue[600]), child: const Text("Personal"));
     }
   }
 
   getFamilyButton(){
-    if(personal){
-      return ElevatedButton(onPressed: (){setState(() { personal = false; });}, child: const Text("Family"), 
-      style: ElevatedButton.styleFrom(primary: Colors.blue[600]));
+    if(personalStatus){
+      return ElevatedButton(onPressed: (){setState(() { personalStatus = false; });}, 
+      style: ElevatedButton.styleFrom(primary: Colors.blue[600]), child: const Text("Family"));
     }else{
+      setState(() {
+        entries = family.home;
+      });
       return TextButton(onPressed: (){}, child: const Text("Family"));
     }
   }

@@ -43,7 +43,20 @@ class _AddMemberPageState extends State<AddMemberPage> {
               ),
             ),
             const SizedBox(height: 20),
-            Card(
+            oneMember("Marita Thushari", "thushibstn24@gmail.com"),
+            oneMember("Hareen Thushan", "thshnbstn78@gmail.com"),
+            oneMember("Holley Randil", "holleyran@gmail.com"),
+            oneMember("Kernal Fernando", "kfernando@hotmail.com"),
+          ],
+        )
+    );
+  }
+}
+
+Widget oneMember(String name, String email){
+  return Card(
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
               child: Container(
                 height: 120,
                 color: Colors.blue[100],
@@ -53,22 +66,23 @@ class _AddMemberPageState extends State<AddMemberPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Expanded(
+                          flex: 2,
                           child: Image.network(
                               'https://www.oberlo.com/media/1605012362-image14.jpg'),
-                          flex: 2,
                         ),
                       ),
                     ),
                     Expanded(
+                      flex: 8,
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Column(
                           children: [
-                            const Expanded(
+                            Expanded(
                               flex: 5,
                               child: ListTile(
-                                title: Text('Thushari'),
-                                subtitle: Text("0769838892"),
+                                title: Text(name),
+                                subtitle: Text(email),
                               ),
                             ),
                             Expanded(
@@ -77,7 +91,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   TextButton(
-                                      child: const Text("Select"), onPressed: () {}),
+                                      child: const Text("Remove"), onPressed: () {}),
                                   const SizedBox(
                                     width: 8,
                                   )
@@ -87,16 +101,9 @@ class _AddMemberPageState extends State<AddMemberPage> {
                           ],
                         ),
                       ),
-                      flex: 8,
                     ),
                   ],
                 ),
               ),
-              elevation: 8,
-              margin: const EdgeInsets.all(10),
-            ),
-          ],
-        )
-    );
-  }
+            );
 }

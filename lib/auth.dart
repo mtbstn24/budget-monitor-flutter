@@ -1,3 +1,4 @@
+import 'package:firebase_flutter/controllers/methods.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -59,6 +60,9 @@ class _FirebaseauthState extends State<Firebaseauth> {
         email: _email.text,
         password: _password.text,
       );
+      // String res = addUserDetails(id: id, email: email)
+      print(credential);
+      addUserDetails(id: credential.user!.uid, email: _email.text);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
           print('The password provided is too weak.');
@@ -99,6 +103,7 @@ class _FirebaseauthState extends State<Firebaseauth> {
                   border: OutlineInputBorder(),
                   hintText: 'Password',
                 ),
+                obscureText: true,
               )
             ),
             Padding(
@@ -117,14 +122,14 @@ class _FirebaseauthState extends State<Firebaseauth> {
                 child: const Text("Sign In"),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: signInWithGoogle,
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(20.0)), 
-                child: const Text("Sign In With Google"),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(10),
+            //   child: ElevatedButton(
+            //     onPressed: signInWithGoogle,
+            //     style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(20.0)), 
+            //     child: const Text("Sign In With Google"),
+            //   ),
+            // ),
           ],
         ),
       ),

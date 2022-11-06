@@ -14,7 +14,6 @@ class _MemberPageState extends State<MemberPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     searchController.dispose();
   }
@@ -38,7 +37,19 @@ class _MemberPageState extends State<MemberPage> {
       body: Column(
           children: [
             const SizedBox(height: 20),
-            Card(
+            oneMember("Marita Thushari", "thushibstn24@gmail.com"),
+            oneMember("Hareen Thushan", "thshnbstn78@gmail.com"),
+          ],
+        )
+    );
+  }
+}
+
+
+Widget oneMember(String name, String email){
+  return Card(
+              elevation: 8,
+              margin: const EdgeInsets.all(10),
               child: Container(
                 height: 120,
                 color: Colors.blue[100],
@@ -48,22 +59,23 @@ class _MemberPageState extends State<MemberPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Expanded(
+                          flex: 2,
                           child: Image.network(
                               'https://www.oberlo.com/media/1605012362-image14.jpg'),
-                          flex: 2,
                         ),
                       ),
                     ),
                     Expanded(
+                      flex: 8,
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Column(
                           children: [
-                            const Expanded(
+                            Expanded(
                               flex: 5,
                               child: ListTile(
-                                title: Text('Thushari'),
-                                subtitle: Text("0769838892"),
+                                title: Text(name),
+                                subtitle: Text(email),
                               ),
                             ),
                             Expanded(
@@ -82,16 +94,9 @@ class _MemberPageState extends State<MemberPage> {
                           ],
                         ),
                       ),
-                      flex: 8,
                     ),
                   ],
                 ),
               ),
-              elevation: 8,
-              margin: const EdgeInsets.all(10),
-            ),
-          ],
-        )
-    );
-  }
+            );
 }
